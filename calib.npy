@@ -1,0 +1,50 @@
+import numpy as np
+import cv2
+import glob
+import sys
+import os
+import argparse
+from stereovision.calibration import StereoCalibrator
+from stereovision.calibration import StereoCalibration
+
+rows = 9
+columns = 6
+square_size = 2.23
+image_size = (640, 480)
+calibrator = StereoCalibrator(rows, columns, square_size, image_size)
+
+workingFolder   = "./"
+imageType       = 'jpg'
+
+filename_L    = workingFolder + "L/*." + imageType
+images_L      = glob.glob(filename_L)
+filename_R    = workingFolder + "R/*." + imageType
+images_R      = glob.glob(filename_R)
+
+print(images_L.sort())
+print(images_R.sort())
+
+for i in range(len(images_L)):
+        fnameL = images_L[i]
+        fnameR = images_R[i]
+        
+        """ LEFT """
+        #-- Read the file and convert in greyscale
+        imgL     = cv2.imread(fnameL)
+        print "Reading image ", fnameL
+        
+        imgR     = cv2.imread(fnameR)
+        print "Reading image ", fnameR
+        
+        calibrator.add_corners((imgL, imgR))
+
+print('calibrating')
+calibration = calibrator.calibrate_cameras()
+
+print('calculating error')
+avg_error = calibrator.check_calibration(calibration)
+print(avg_error)
+
+print('exporting')
+calib_clone = StereoCalibration(calibration)
+calib_clone.export('output')
