@@ -1,3 +1,4 @@
+# 3D Structured Light Camera
 Structured light depth cameras offer a fast and accurate means of depth-estimation for virtual and augmented reality applications. By projecting light-encoded information into a scene and taking images from two different camera perspectives, we can calculate camera pixel displacement and then triangulate the depth of each pixel.
 
 
