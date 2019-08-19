@@ -1,15 +1,23 @@
-Abstract
+Structured light depth cameras offer a fast and accurate means of depth-estimation for virtual and augmented reality applications. By projecting light-encoded information into a scene and taking images from two different camera perspectives, we can calculate camera pixel displacement and then triangulate the depth of each pixel.
 
-Structured light depth cameras offer a fast, accurate, and affordable means of depth-estimation for augmented reality applications using Simultaneous Localization and Mapping (SLAM) that traditional LIDAR scanners cannot. By projecting light-encoded information into a scene, structured light methods solve the traditional stereo correspondence problem more efficiently, allowing real-time, high resolution 3D reconstruction. Although temporal projection schemes produce accurate depth maps, they require heavy thresholding and averaging. In this paper we present a temporal projection scheme using Walsh codes that is self-referencing, fast, and accurate.
 
-Introduction
+<img src="images/depth estimation.png">
+For a given point P in the scene whose x coordinate is xl as seen from camera L and xr as seen from camera R, we can calculate its depth z by using similar triangles. Substituting for x we arrive at the equation z = f (b / xl-xr) where xl-xr is the pixel displacement. Therefore our reconstruction algorithm is as follows: for a pair of images, find the correspondance between every pixel, measure the displacement, and calculate depth.
 
-Simultaneous Localization and Mapping (SLAM) is a method commonly used by autonomous robots to map and navigate an environment. At each time step, SLAM identifies landmarks in the environment and updates position based on those landmarks and internal odometry. Landmark identification requires computing distance to obstacles in the environment and is usually performed by LIDAR (Light Imaging Detection and Ranging) scanning. LIDAR computes distance by illuminating its target with a laser and measuring the reflected laser return time. While LIDAR distance readings are fast and accurate, they are limited to one point at a time and the laser needs to be rotated on an axis in order to scan the full range of an environment. For this reason LIDAR-generated maps are often 2-dimensional, only mapping a horizontal cross-section of the 3-dimensional environment. Above all, the largest disadvantage of LIDAR is its price - commercial LIDAR scanners can range anywhere from hundreds to thousands of dollars.
 
-One application of SLAM where price and full 3D reconstruction are especially important factors is AR or Augmented Reality \cite{5}. AR enhances our view of the physical world by projecting graphical information on a display such as a headset or mobile phone, and has powerful applications in many fields. Depth estimation and SLAM are key then to accurate content projection. There are a limited number of AR applications at the moment because most smartphones are not currently equipped with depth-sensing capabilities. LIDAR is too expensive, and stereovision, the other main method of depth estimation, is too slow. The goal of my thesis is to address these problems by building a depth-sensing system that is
+<img src="images/camera.png">
+The camera apparatus consists of two Raspberry Pi Model B's and Camera Module v2's, and a DBPower LCD projector. The cameras are mounted on an acrylic mast at a known distance apart in a fronto-parallel geometry. The body of the mast holds the projector and the Raspberry Pi’s.
 
-Apparatus
 
-The camera apparatus consists of two Raspberry Pi Model B's and Camera Module v2's, and a DBPower LCD projector. The cameras are mounted on an acrylic mast at a known distance apart in a fronto-parallel geometry. The body of the mast holds the projector and the Raspberry Pi’s. A circular hole is cut out in the front wall of mast between the cameras for the projector lens. The system described is shown in Figure 3.1. The range of our structured-light stereo camera system is limited by the projection range of the projector (1-3 meters) because the lens must be tuned for sharp projection patterns.
+<img src="images/projection.png">
+Projecting light patterns, in this case black and white stripes, adds uniqueness into the scene that allows us to solve the pixel correspondance problem.
 
-A python script controls both Pi’s and executes simultaneous captures. The right camera then streams its data and images over to the left camera which performs all processing. The final results of processing are a disparity map and depth map, which are grayscale images of the same dimension as the original image. Their values represent the disparity in pixels and depth in centimeters of each pixel, and can also be represented as a 3D colored point cloud that can be viewed in MeshLab.
+
+<img src="images/room_left.png">
+<img src="images/room_right.png">
+Here are a pair of images of a scene in my dorm room, with two corresponding pixels highlighted that are clearly displaced.
+
+
+<img src="images/map_left.png">
+<img src="images/map_right.png">
+3D point clouds of the scene plotted in Meshlab.
